@@ -1,0 +1,19 @@
+{% extends "layouts/main.html" %}
+
+{% block content%}
+
+</body>
+<h1>{{greetings}}</h1>
+
+<h5>{{detail}}</h5>
+
+<form action='' method="post">
+<label for="firstname">First Name:</label>
+<input type="text" id="firstname" name="fname" placeholder="firstname">
+<label for="lastname">Last Name:</label>
+<input type="text" id="lastname" name="lname" placeholder="lastname">
+<button type="submit">Login</button>
+</form>
+</body>
+
+{% endblock %}
