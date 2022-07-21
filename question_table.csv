@@ -1,0 +1,5 @@
+﻿id,question_id,question_label,question_text,answer,options,options1,options2,options3
+1,1,Check all that apply:,Which programming languages are compiled?,"Golang, C","JavaScript, Golang, C",JavaScript,Golang,C
+2,2,Input answer in text box:,What is the capitol of Vermont?,Montpelier,,,,
+3,3,Boolean,The current US President is Joe Biden.,True,"True, False",True,False,
+4,4,Multiple Choice,Which car brand is made in Japan?,Honda,"Honda, Buick, Mercedes-Benz",Honda,Buick,Mercedes-Benz

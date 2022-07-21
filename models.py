@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
 
@@ -34,10 +33,11 @@ class QuestionModel(db.Model):
     question_id = db.Column(db.Integer(), unique=True)  # no need? just use id above
     question_label = db.Column(db.String())
     question_text = db.Column(db.String())
-    answer = db.Column(db.String())
-    options1 = db.Column(db.String())
-    options2 = db.Column(db.String())
-    options3 = db.Column(db.String())
+    answer = db.Column(db.String(), nullable=False)
+    options = db.Column(db.String(), nullable=True)
+    options1 = db.Column(db.String(), nullable=True)
+    options2 = db.Column(db.String(), nullable=True)
+    options3 = db.Column(db.String(), nullable=True)
 
     # Questions BELONG TO MANY quizzes
 
@@ -47,6 +47,7 @@ class QuestionModel(db.Model):
         question_label,
         question_text,
         answer,
+        options,
         options1,
         options2,
         options3,
@@ -55,6 +56,7 @@ class QuestionModel(db.Model):
         self.question_label = question_label
         self.question_text = question_text
         self.answer = answer
+        self.options = options
         self.options1 = options1
         self.options2 = options2
         self.options3 = options3

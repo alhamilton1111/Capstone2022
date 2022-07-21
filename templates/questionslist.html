@@ -1,15 +1,15 @@
-
 <table>
     <thead>
         <tr>
             <th>Select</th>
-          <th>ID</th>
-          <th>Category</th>
-          <th>Question</th>
-          <th>Answer</th>
-          <th>Option 1</th>
-          <th>Option 2</th>
-          <th>Option 3</th>
+            <th>ID</th>
+            <th>Category</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Options</th>
+            <th>Option 1</th>
+            <th>Option 2</th>
+            <th>Option 3</th>
         </tr>
     </thead>
     {% for question in questions %}
@@ -21,6 +21,7 @@
         <td>{{question.question_label}}</td>
         <td>{{question.question_text}}</td>
         <td>{{question.answer}}</td>
+        <td>{{question.options}}</td>
         <td>{{question.options1}}</td>
         <td>{{question.options2}}</td>
         <td>{{question.options3}}</td>

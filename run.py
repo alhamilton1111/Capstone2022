@@ -4,6 +4,7 @@ import os
 import random
 import urllib.request, json
 from flask_mail import Mail, Message
+from create_db import main
 
 app = Flask(__name__)
 
@@ -15,21 +16,22 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 # for email send function
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'synergysimulator@gmail.com'
-app.config['MAIL_PASSWORD'] = 'uujjnzsnnngjkkhg'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True # True if Port = 465
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 465
+app.config["MAIL_USERNAME"] = "synergysimulator@gmail.com"
+app.config["MAIL_PASSWORD"] = "uujjnzsnnngjkkhg"
+app.config["MAIL_USE_TLS"] = False
+app.config["MAIL_USE_SSL"] = True  # True if Port = 465
 mail = Mail(app)
 
 # http://getskeleton.com/
 # https://opentdb.com/api_config.php
 
 # export DATABASE_URL2='sqlite:///quizgame.db'
-#os.system(DATABASE_URL2='sqlite:///quizgame.db')
+# os.system(DATABASE_URL2='sqlite:///quizgame.db')
 # python3 run.py
-#global QUESTIONNUMBER
+# global QUESTIONNUMBER
+
 
 def genKey():
     """
@@ -49,16 +51,16 @@ def getQuestions(qty):
         print(data)
     QUESTIONNUMBER = 8888
     qnum = QUESTIONNUMBER + 1
-    for eachQ in data['results']:
+    for eachQ in data["results"]:
         print(eachQ)
         question = QuestionModel(
             question_id=qnum,
-            question_label=eachQ['category'],
-            question_text=eachQ['question'],
-            answer=eachQ['correct_answer'],
-            options1=str(eachQ['incorrect_answers'][0]),
-            options2=str(eachQ['incorrect_answers'][1]),
-            options3=str(eachQ['incorrect_answers'][2]),
+            question_label=eachQ["category"],
+            question_text=eachQ["question"],
+            answer=eachQ["correct_answer"],
+            options1=str(eachQ["incorrect_answers"][0]),
+            options2=str(eachQ["incorrect_answers"][1]),
+            options3=str(eachQ["incorrect_answers"][2]),
         )
         qnum += 1
         db.session.add(question)
@@ -72,15 +74,17 @@ def get_question(id):
 
 
 def emailWork(recpEmail, quizID):
-    #msg = Message('Hello', sender='synergysimulator@gmail.com', recipients=[
+    # msg = Message('Hello', sender='synergysimulator@gmail.com', recipients=[
     # 'alhamilton1111@gmail.com'])
-    msg = Message('Hello', sender='synergysimulator@gmail.com', recipients=[recpEmail])
-    msg.body = f"Hello Flask message sent from Flask-Mail this is from " \
-               f"Synergy Simulator: {quizID}"
+    msg = Message("Hello", sender="synergysimulator@gmail.com", recipients=[recpEmail])
+    msg.body = (
+        f"Hello Flask message sent from Flask-Mail this is from "
+        f"Synergy Simulator: {quizID}"
+    )
 
     # You can also use msg.html to send html templates!
     # Example:
-    #msg.html = render_template("hello.html") # Template should be in 'templates' folder
+    # msg.html = render_template("hello.html") # Template should be in 'templates' folder
 
     mail.send(msg)
     return "Your email has been sent!"
@@ -91,11 +95,11 @@ os.chdir(".")
 print(os.getcwd())
 
 
-
 # CREATE IF NOT EXISTS
 @app.before_first_request
-def create_table():
-    db.create_all()
+def table():
+    #  db.create_all()
+    main()
 
 
 @app.route("/")
@@ -160,11 +164,11 @@ def index4():
 def index5():
     greetings = """Welcome Candidates!"""
 
-    detail = "We are excited for you to take the next steps in your " \
-             "employment journey."
+    detail = (
+        "We are excited for you to take the next steps in your " "employment journey."
+    )
 
-    return render_template("candidate.html", greetings=greetings,
-                           detail=detail)
+    return render_template("candidate.html", greetings=greetings, detail=detail)
 
 
 @app.route("/sendemail", methods=["GET", "POST"])
@@ -173,34 +177,47 @@ def sendemail():
 
     detail = "SENDING EMail to: "
     emailID = "alhamilton1111@gmail.com"
-    quizzer = genKey() # this needs to move to quiz gen page and be sent to this variable
+    quizzer = (
+        genKey()
+    )  # this needs to move to quiz gen page and be sent to this variable
     goodNews = emailWork(emailID, quizzer)
 
-    return render_template("emailsent.html", greetings=greetings, detail=detail,
-                           emailTo=emailID, quizID=quizzer, finish=goodNews)
+    return render_template(
+        "emailsent.html",
+        greetings=greetings,
+        detail=detail,
+        emailTo=emailID,
+        quizID=quizzer,
+        finish=goodNews,
+    )
+
 
 @app.route("/employer")
 def index6():
     greetings = """Welcome Employer!"""
 
-    detail = "Please select from the following options to find the candidate " \
-             "of your dreams"
+    detail = (
+        "Please select from the following options to find the candidate "
+        "of your dreams"
+    )
     # DFG
     QuestionModel.query.delete()
     getQuestions(10)
 
     return render_template("employer.html", greetings=greetings, detail=detail)
 
+
 @app.route("/makeQuiz", methods=["GET"])
 def index7():
     greetings = """Make a Quiz"""
 
-    detail = "Please select from the following questions to customize your " \
-             "quiz."
+    detail = "Please select from the following questions to customize your " "quiz."
 
     questions = QuestionModel.query.all()
 
-    return render_template("makeQuiz.html", greetings=greetings, detail=detail, questions=questions)
+    return render_template(
+        "makeQuiz.html", greetings=greetings, detail=detail, questions=questions
+    )
 
 
 # CREATE VIEW -- TO REMOVE for FINAL submission -- (for testing only)
@@ -215,14 +232,19 @@ def create():
         question_text = request.form["question_text"]
         answer = request.form["answer"]
         options = request.form["options"]
+        options1 = request.form["options1"]
+        options2 = request.form["options2"]
+        options3 = request.form["options3"]
         if question_label == checks:
-
             question = QuestionModel(
                 question_id=question_id,
                 question_label=question_label,
                 question_text=question_text,
                 answer=answer,
                 options=options,
+                options1=options1,
+                options2=options2,
+                options3=options3,
             )
         else:
             question = QuestionModel(
@@ -231,6 +253,9 @@ def create():
                 question_text=question_text,
                 answer=answer,
                 options=options,
+                options1=options1,
+                options2=options2,
+                options3=options3,
             )
         db.session.add(question)
         db.session.commit()
@@ -242,10 +267,8 @@ def create():
 def RetrieveQuestionsList():
     questions = QuestionModel.query.all()
     print(questions[0].question_text)
-#    questions = [dict(q) for q in questions]
-
-
-    print("trying to read DB")
+    #    questions = [dict(q) for q in questions]
+    # print("trying to read DB")
     return render_template("questionslist.html", questions=questions)
 
 
@@ -276,11 +299,19 @@ def update(id):
             question_label = request.form["question_label"]
             question_text = request.form["question_text"]
             answer = request.form["answer"]
+            options = request.form["options"]
+            options1 = request.form["options1"]
+            options2 = request.form["options2"]
+            options3 = request.form["options3"]
             question = QuestionModel(
                 question_id=id,
                 question_label=question_label,
                 question_text=question_text,
                 answer=answer,
+                options=options,
+                options1=options1,
+                options2=options2,
+                options3=options3,
             )
 
             db.session.add(question)

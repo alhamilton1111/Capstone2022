@@ -1,0 +1,5 @@
+﻿id,question_id,candidate_id,question_label,answer,correct
+1,1,1,Check all that apply:,"C, Golang",1
+2,2,1,Input answer in text box:,Montpelier,1
+3,3,1,Boolean,T,1
+4,4,1,Multiple Choice,Honda,1
