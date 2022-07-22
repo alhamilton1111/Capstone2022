@@ -1,4 +1,13 @@
-from models import db, QuestionModel, AnswerModel, Answer, Quiz, Keys, CandidateModel, QuizQuestions
+from models import (
+    db,
+    QuestionModel,
+    AnswerModel,
+    Answer,
+    Quiz,
+    Keys,
+    CandidateModel,
+    QuizQuestions,
+)
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 import os
 import random
@@ -75,19 +84,9 @@ def get_question(id):
 
 
 def emailWork(recpEmail, quizID):
-<<<<<<< HEAD
-    # msg = Message('Hello', sender='synergysimulator@gmail.com', recipients=[
-    # 'alhamilton1111@gmail.com'])
-    msg = Message("Hello", sender="synergysimulator@gmail.com", recipients=[recpEmail])
-    msg.body = (
-        f"Hello Flask message sent from Flask-Mail this is from "
-        f"Synergy Simulator: {quizID}"
-    )
-=======
-    #msg = Message('Hello', sender='medleaconsulting@gmail.com', recipients=['davegillis4@gmail.com'])
-    msg = Message('Hello', sender='medleaconsulting@gmail.com', recipients=[recpEmail])
+    # msg = Message('Hello', sender='medleaconsulting@gmail.com', recipients=['davegillis4@gmail.com'])
+    msg = Message("Hello", sender="medleaconsulting@gmail.com", recipients=[recpEmail])
     msg.body = f"Hello {recpEmail}, your Quiz is ready from Synergy Simulator: {quizID}"
->>>>>>> main
 
     # You can also use msg.html to send html templates!
     # Example:
@@ -183,15 +182,10 @@ def sendemail():
     greetings = """Email Sent!"""
 
     detail = "SENDING EMail to: "
-<<<<<<< HEAD
-    emailID = "alhamilton1111@gmail.com"
+    emailID = "davegillis4@gmail.com"
     quizzer = (
         genKey()
     )  # this needs to move to quiz gen page and be sent to this variable
-=======
-    emailID = "davegillis4@gmail.com"
-    quizzer = genKey() # this needs to move to quiz gen page and be sent to this variable
->>>>>>> main
     goodNews = emailWork(emailID, quizzer)
 
     return render_template(
@@ -218,26 +212,19 @@ def index6():
 
     return render_template("employer.html", greetings=greetings, detail=detail)
 
-<<<<<<< HEAD
-
-@app.route("/makeQuiz", methods=["GET"])
-def index7():
-    greetings = """Make a Quiz"""
-
-    detail = "Please select from the following questions to customize your " "quiz."
-=======
 
 @app.route("/makeQuiz", methods=["GET", "POST"])
 def quiz():
-    if request.method == 'GET':
+    if request.method == "GET":
         greetings = """Make a Quiz"""
 
-        detail = "Please select from the following questions to customize your " \
-                 "quiz."
+        detail = "Please select from the following questions to customize your " "quiz."
 
         all_candidates = CandidateModel.query.all()
         questions = QuestionModel.query.all()
-        quizzes_query = db.session.query(Quiz, CandidateModel).join(CandidateModel, Quiz.candidate_id == CandidateModel.id)
+        quizzes_query = db.session.query(Quiz, CandidateModel).join(
+            CandidateModel, Quiz.candidate_id == CandidateModel.id
+        )
         quizzes = quizzes_query.all()
         print(type(quizzes))
         return render_template(
@@ -246,31 +233,24 @@ def quiz():
             detail=detail,
             questions=questions,
             candidates=all_candidates,
-            quizzes=quizzes
+            quizzes=quizzes,
         )
-    elif request.method == 'POST':
-        candidate_id = request.form['candidate']
-        if candidate_id == '*':
-            flash('There are no candidates registered.')
+    elif request.method == "POST":
+        candidate_id = request.form["candidate"]
+        if candidate_id == "*":
+            flash("There are no candidates registered.")
             abort(422)
 
-        candidate = CandidateModel.query.filter(CandidateModel.id == candidate_id).first()
+        candidate = CandidateModel.query.filter(
+            CandidateModel.id == candidate_id
+        ).first()
         print(candidate)
         new_quiz = Quiz(candidate_id=candidate.id, key=genKey())
         db.session.add(new_quiz)
         db.session.commit()
-        flash(f'Successfully created a quiz for {candidate.name}')
+        flash(f"Successfully created a quiz for {candidate.name}")
 
-        return redirect(url_for('quiz'))
->>>>>>> main
-
-
-<<<<<<< HEAD
-    return render_template(
-        "makeQuiz.html", greetings=greetings, detail=detail, questions=questions
-    )
-=======
->>>>>>> main
+        return redirect(url_for("quiz"))
 
 
 # CREATE VIEW -- TO REMOVE for FINAL submission -- (for testing only)
@@ -320,40 +300,47 @@ def create():
 def RetrieveQuestionsList(candidate_id, quiz_id):
     # Get all stored questions.
     questions = QuestionModel.query.all()
-<<<<<<< HEAD
-    print(questions[0].question_text)
-    #    questions = [dict(q) for q in questions]
-    # print("trying to read DB")
-    return render_template("questionslist.html", questions=questions)
-=======
     # get the quiz from db by id.
+    #  print(questions[0].question_text)
+    # #    questions = [dict(q) for q in questions]
+    # # print("trying to read DB")
+    # return render_template("questionslist.html", questions=questions)
     candidate_quiz = Quiz.query.filter(Quiz.id == quiz_id).first()
     # get the candidate from db by id.
     candidate = CandidateModel.query.filter(CandidateModel.id == candidate_id).first()
 
     # TODO: get all questions already associated with this quiz.
-    return render_template("questionslist.html", quiz=candidate_quiz, questions=questions, candidate=candidate)
+    return render_template(
+        "questionslist.html",
+        quiz=candidate_quiz,
+        questions=questions,
+        candidate=candidate,
+    )
 
-@app.route('/candidate/<int:candidate_id>/quiz/<int:quiz_id>/add', methods=['POST'])
+
+@app.route("/candidate/<int:candidate_id>/quiz/<int:quiz_id>/add", methods=["POST"])
 def add_questions(candidate_id, quiz_id):
-    q_selection = request.form.getlist('questions')
-    questions = QuestionModel.query.filter(QuestionModel.question_id.in_(q_selection)).all()
+    q_selection = request.form.getlist("questions")
+    questions = QuestionModel.query.filter(
+        QuestionModel.question_id.in_(q_selection)
+    ).all()
     if not questions:
-        flash('No questions found')
+        flash("No questions found")
         abort(404)
 
     candidate = CandidateModel.query.filter(CandidateModel.id == candidate_id).first()
     candidate_quiz_query = Quiz.query.filter(Quiz.id == quiz_id)
     candidate_quiz = candidate_quiz_query.first()
     if not candidate_quiz:
-        flash('404: Quiz not found.')
+        flash("404: Quiz not found.")
         abort(404)
 
     for question in questions:
-        quiz_question = QuizQuestions(quiz_id=candidate_quiz.id, question_id=question.id)
+        quiz_question = QuizQuestions(
+            quiz_id=candidate_quiz.id, question_id=question.id
+        )
         db.session.add(quiz_question)
     db.session.commit()
->>>>>>> main
 
     result = emailWork(candidate.email, candidate_quiz.key)
 
@@ -362,7 +349,8 @@ def add_questions(candidate_id, quiz_id):
         candidate_quiz.email_sent = 1
         db.session.commit()
 
-    return redirect(url_for('quiz'))
+    return redirect(url_for("quiz"))
+
 
 # RETRIEVE SINGLE QUESTION
 @app.route("/questions/<int:id>")
@@ -508,34 +496,38 @@ def answer_question(candidate_id, id):
         return redirect(f"/answerquestion/{candidate_id}/{id}")
     return f"No question exists for question {id}"
 
-@app.route('/register', methods=['GET', 'POST'])
+
+@app.route("/register", methods=["GET", "POST"])
 def register_user():
     print(request.method)
-    if request.method == 'GET':
-        return render_template('register.html')
-    elif request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
+    if request.method == "GET":
+        return render_template("register.html")
+    elif request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
 
         candidate = CandidateModel.query.filter(CandidateModel.email == email).first()
 
         if candidate:
-            flash('User already registered', 'error')
-            return render_template('register.html'), 400
+            flash("User already registered", "error")
+            return render_template("register.html"), 400
 
         new_candidate = CandidateModel(name, email)
         db.session.add(new_candidate)
         db.session.commit()
-        flash('User successfully registered', 'success')
-        return redirect(url_for('candidates'))
+        flash("User successfully registered", "success")
+        return redirect(url_for("candidates"))
 
-@app.route('/quiz/<int:key>')
+
+@app.route("/quiz/<int:key>")
 def take_quiz(key):
-    return 'you are taking a quiz.'
+    return "you are taking a quiz."
+
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template("404.html"), 404
+
 
 if __name__ == "__main__":
 
