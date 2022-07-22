@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+=======
+{% extends "layouts/main.html" %}
+
+{% block content%}
+<div>
+    Select Questions for Quiz ID: {{ quiz.id }}
+</div>
+>>>>>>> main
 <table>
     <thead>
         <tr>
@@ -6,7 +15,10 @@
             <th>Category</th>
             <th>Question</th>
             <th>Answer</th>
+<<<<<<< HEAD
             <th>Options</th>
+=======
+>>>>>>> main
             <th>Option 1</th>
             <th>Option 2</th>
             <th>Option 3</th>
@@ -15,7 +27,7 @@
     {% for question in questions %}
     <tr>
         <td>
-            <input type="checkbox" value="{{question.question_id}}" />
+            <input form="questionsToAdd" type="checkbox" name="questions" value="{{question.question_id}}" />
         </td>
         <td>{{question.question_id}}</td>
         <td>{{question.question_label}}</td>
@@ -32,6 +44,16 @@
 
 </table>
 
+<form
+        id="questionsToAdd"
+        name="questionsToAdd"
+        method="POST"
+        action="{{ url_for('add_questions', candidate_id=candidate.id, quiz_id=quiz.id) }}"
+>
+    <button type="submit">Add Questions To Quiz {{ quiz.id }}</button>
+</form>
+
+{% endblock %}
 
 <!--            question_id=qnum,-->
 <!--            question_label=eachQ['category'],-->

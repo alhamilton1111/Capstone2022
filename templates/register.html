@@ -1,0 +1,33 @@
+{% extends "layouts/main.html" %}
+
+{% block content%}
+<div>
+    Please register an account with us
+</div>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div style="color: red; padding: 8px; border-radius: 2px; margin-bottom:8px">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<form
+        id="register"
+        name="register"
+        method="POST"
+        action="{{ url_for('register_user') }}"
+>
+    <label>
+        Name:
+        <input type="text" name="name" id="name" />
+    </label>
+    <label>
+        Email:
+        <input type="email" name="email" id="email" />
+    </label>
+    <button type="submit">Register</button>
+</form>
+
+{% endblock %}

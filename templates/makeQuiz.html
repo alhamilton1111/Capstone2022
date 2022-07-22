@@ -7,8 +7,77 @@
 
 <h5>{{detail}}</h5>
 
-<input id="id_ok" class="btn btn-space" value="Get Questions" type="button"
-       onclick="location.href='/questions';">
+<!--USE FOR Notifying user politely what went wrong-->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div style="color: red; padding: 8px; border-radius: 2px; margin-bottom:8px">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div>
+    <select form="makeQuiz" id='candidate' name="candidate">
+        {% if candidates|length > 0 %}
+            {% for candidate in candidates %}
+            <option value="{{ candidate.id }}">{{ candidate.email }}</option>
+            {% endfor %}
+        {% else %}
+        <option value="*">No candidates registered</option>
+        {% endif %}
+    </select>
+</div>
+
+<form
+        id="makeQuiz"
+        name="makeQuiz"
+        action="{{ url_for('quiz') }}"
+        method="POST"
+>
+    <button form="makeQuiz" type="submit">
+        Create Quiz
+    </button>
+</form>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Candidate Name</th>
+            <th>Candidate Email</th>
+            <th>Completed?</th>
+            <th>Email Sent</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if quizzes|length > 0 %}
+        {% for quiz in quizzes %}
+        <tr>
+            <td>{{ quiz[0].id }}</td>
+            <td>{{ quiz[1].name }}</td>
+            <td>{{ quiz[1].email }}</td>
+            <td>{{ quiz[0].completed }}</td>
+            <td>{{ quiz[0].email_sent }}</td>
+            <td>
+                {% if quiz[0].email_sent %}
+                <span>Quiz sent to Candidate</span>
+                {% else %}
+                <a class="btn btn-success" href="{{ url_for('RetrieveQuestionsList', quiz_id=quiz[0].id, candidate_id=quiz[1].id) }}">Add Questions</a>
+                {% endif %}
+            </td>
+<!--            TODO: create a delete button for a quiz. -->
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td>No outstanding quizzes.</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+
 
 </body>
 

@@ -1,7 +1,7 @@
 
 <h1>{{greetings}}</h1>
 <h5>{{detail}}</h5>
-
+<a href="{{ url_for('register_user') }}">Register</a>
 
 {% for question in questions %}
 <h3>{{question.candidate_id}}</h3>
