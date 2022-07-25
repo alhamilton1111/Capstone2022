@@ -548,7 +548,7 @@ def page_not_found(e):
 if __name__ == "__main__":
 
     app.directory = "./"
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5003, debug=True)
 
     # https://www.askpython.com/python-modules/flask/flask-flash-method
     # export DATABASE_URL2='sqlite:///quizgame.db'

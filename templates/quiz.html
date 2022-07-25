@@ -1,0 +1,72 @@
+{% extends "layouts/main.html" %}
+
+{% block content%}
+<div>
+    <h1>Hi, {{ candidate.name }} Here is your quiz.</h1>
+    <div>You have <span id="timer">5:00</span> Minutes Left</div>
+    {% if questions %}
+        <form
+            id="quiz"
+            name="quiz"
+            method="POST"
+            action="{{ url_for('process_quiz', candidate_id=candidate.id, quiz_id=quiz.id) }}"
+        >
+        {% for question in questions %}
+            <div style="display: flex; flex-direction: column; margin-bottom: 64px;">
+                <div style="margin-bottom: 16px;">
+                    {{ question.question }}
+                </div>
+                <div style="display: flex; flex-direction: column">
+                {% for option in question.options %}
+                    <div class="flex">
+                        <label class="flex column" style="display: flex; flex-direction: row-reverse; align-items: center; justify-content: flex-end;">
+                            {{ option }}
+                            <input
+                                    style="margin: 16px;"
+                                    type="radio"
+                                    name="{{ question.id }}"
+                                    id="{{ question.question }}-{{ option }}"
+                                    value="{{ option }}"
+                                    required
+                            />
+                        </label>
+                    </div>
+                {% endfor %}
+                    <div style="display: none">
+                        <label class="flex column" style="display: flex; flex-direction: row-reverse; align-items: center; justify-content: flex-end;">
+                            <input
+                                style="margin: 16px;"
+                                type="radio"
+                                name="{{ question.id }}"
+                                id="{{ question.question }}-default"
+                                value="INCOMPLETE"
+                                checked="checked"
+                                required
+                            />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+            <button type="submit">Submit your Answers</button>
+        </form>
+    {% endif %}
+</div>
+<script>
+    const quizForm = document.getElementById('quiz');
+    const timerDisplay = document.getElementById('timer');
+    const TIME_LIMIT = 1 * 60; // minutes * seconds/min
+    let timeLeft = TIME_LIMIT;
+    const timer = setInterval(() => {
+        timeLeft--;
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = Math.floor(timeLeft % 60);
+        timerDisplay.innerText = `${minutes}:${seconds}`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            quizForm.submit();
+        }
+    }, 1000);
+</script>
+{% endblock %}

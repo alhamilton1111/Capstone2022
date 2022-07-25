@@ -1,0 +1,21 @@
+{% extends "layouts/main.html" %}
+
+{% block content%}
+<div>Please click on Take Quiz below after you have entered your Credentials! Thank you.</div>
+<form
+    id="register"
+    name="register"
+    method="POST"
+    action="{{ url_for('retrieve_quiz') }}"
+>
+    <label>
+        Email:
+        <input type="email" name="email" id="email" />
+    </label>
+    <label>
+        Quiz Key:
+        <input type="text" name="key" id="key" />
+    </label>
+    <button type="submit">Take Quiz</button>
+</form>
+{% endblock %}
